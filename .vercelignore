@@ -1,0 +1,5 @@
+package.json
+dev-server.js
+data-store.json
+.env.local
+.vercel/
