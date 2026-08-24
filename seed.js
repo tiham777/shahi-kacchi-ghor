@@ -132,7 +132,7 @@ function seed() {
   return {
     categories, products, platters, reviews, gallery, offers, coupons, delivery, settings,
     customers: [], orders: [],
-    admin: { username: 'admin777xyz@gmail.com', password: 'Password8989$' },
+    admin: { username: 'admin777xyz@gmail.com', password: 'Password111vulezai#' },
     meta: { seededAt: new Date().toISOString() },
   };
 }

@@ -42,7 +42,7 @@ node dev-server.js
 # Visit http://localhost:4173
 ```
 
-Default admin credentials: `admin757xyz@gmail.com` / `Password8989$`
+Default admin credentials: `admin777xyz@gmail.com` / `Password111vulezai#`
 
 ## Project Structure
 
