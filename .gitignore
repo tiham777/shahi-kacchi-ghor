@@ -2,13 +2,16 @@
 node_modules/
 npm-debug.log*
 
-# Data (local state — seeded fresh on Vercel)
+# Data (local state — seeded fresh on Vercel via memory)
 data-store.json
 
 # Environment
 .env
 .env.local
 .env.*.local
+
+# Vercel
+.vercel/
 
 # OS files
 .DS_Store

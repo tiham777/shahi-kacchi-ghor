@@ -11,12 +11,26 @@ const PORT = process.env.PORT || 4173;
 const STORE = path.join(ROOT, 'data-store.json');
 const TYPES = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.svg': 'image/svg+xml', '.ico': 'image/x-icon', '.json': 'application/json' };
 
-/* ---------- store helpers (sync = atomic in single-threaded Node) ---------- */
+/* ---------- store helpers ---------- */
+// On Vercel (read-only filesystem), persist to memory instead of disk.
+let state = null;
+const isReadOnlyFS = (() => {
+  try { fs.writeFileSync(STORE + '.test', '1'); fs.unlinkSync(STORE + '.test'); return false; }
+  catch { return true; }
+})();
+
 function load() {
-  try { return JSON.parse(fs.readFileSync(STORE, 'utf8')); }
-  catch (e) { const s = seed(); fs.writeFileSync(STORE, JSON.stringify(s, null, 2)); return s; }
+  if (state) return state;
+  try { state = JSON.parse(fs.readFileSync(STORE, 'utf8')); }
+  catch (e) { state = seed(); }
+  return state;
 }
-function persist(state) { fs.writeFileSync(STORE, JSON.stringify(state, null, 2)); }
+function persist(newState) {
+  state = newState;
+  if (!isReadOnlyFS) {
+    try { fs.writeFileSync(STORE, JSON.stringify(newState, null, 2)); } catch { /* read-only FS, keep in-memory */ }
+  }
+}
 function uid(prefix) { return prefix + Math.random().toString(36).slice(2, 8) + Date.now().toString(36).slice(-3); }
 
 function sendJSON(res, code, obj) {
