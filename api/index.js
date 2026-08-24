@@ -1,4 +1,4 @@
-// Vercel Serverless Function — handles all API requests from server.js
+// Vercel Serverless Function — handles all API requests
 // On Vercel's serverless platform, data is stored in-memory per-function instance.
 // The state is seeded automatically from seed.js on first request.
 const { seed } = require('../seed');
@@ -36,13 +36,12 @@ const SINGLETONS = { settings: 1, delivery: 1, admin: 1 };
 async function handleApi(req, res, parts) {
   const seg = parts.slice(1);
   const method = req.method;
-  const state = load();
+  const s = load();
 
-  if (seg[0] === 'state' && method === 'GET') return sendJSON(res, 200, state);
+  if (seg[0] === 'state' && method === 'GET') return sendJSON(res, 200, s);
   if (seg[0] === 'reset' && method === 'POST') {
-    const s = seed();
-    state = s;
-    return sendJSON(res, 200, s);
+    state = seed();
+    return sendJSON(res, 200, state);
   }
 
   // singleton PATCH: /api/singleton/:name
@@ -50,30 +49,30 @@ async function handleApi(req, res, parts) {
     const name = seg[1];
     if (!SINGLETONS[name]) return sendJSON(res, 404, { error: 'unknown singleton' });
     const patch = await readBody(req);
-    state[name] = { ...state[name], ...patch };
-    return sendJSON(res, 200, state[name]);
+    s[name] = { ...s[name], ...patch };
+    return sendJSON(res, 200, s[name]);
   }
 
   // collection ops: /api/coll/:name (POST add), /api/coll/:name/:id (PATCH/DELETE)
   if (seg[0] === 'coll') {
     const name = seg[1], id = seg[2];
-    if (!Array.isArray(state[name])) return sendJSON(res, 404, { error: 'unknown collection' });
+    if (!Array.isArray(s[name])) return sendJSON(res, 404, { error: 'unknown collection' });
 
     if (method === 'POST' && !id) {
       const obj = await readBody(req);
       if (!obj.id) obj.id = uid(name[0] + '_');
-      state[name].unshift(obj);
+      s[name].unshift(obj);
       return sendJSON(res, 201, obj);
     }
     if (method === 'PATCH' && id) {
       const patch = await readBody(req);
-      const i = state[name].findIndex(x => x.id === id);
+      const i = s[name].findIndex(x => x.id === id);
       if (i < 0) return sendJSON(res, 404, { error: 'not found' });
-      state[name][i] = { ...state[name][i], ...patch };
-      return sendJSON(res, 200, state[name][i]);
+      s[name][i] = { ...s[name][i], ...patch };
+      return sendJSON(res, 200, s[name][i]);
     }
     if (method === 'DELETE' && id) {
-      state[name] = state[name].filter(x => x.id !== id);
+      s[name] = s[name].filter(x => x.id !== id);
       return sendJSON(res, 200, { ok: true });
     }
   }
