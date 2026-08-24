@@ -1,0 +1,15 @@
+{
+  "name": "shahi-kacchi-ghor",
+  "version": "1.0.0",
+  "description": "Shahi Kacchi Ghor — Authentic Bangladeshi Biriyani",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": ["restaurant", "biriyani", "food", "ordering"],
+  "author": "tiham777"
+}
