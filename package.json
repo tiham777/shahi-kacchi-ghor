@@ -2,6 +2,7 @@
   "name": "shahi-kacchi-ghor",
   "version": "1.0.0",
   "description": "Shahi Kacchi Ghor — Authentic Bangladeshi Biriyani",
+  "main": "index.js",
   "engines": {
     "node": ">=18"
   },

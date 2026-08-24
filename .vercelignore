@@ -1,5 +1,0 @@
-# Exclude dev server and local data from Vercel build
-dev-server.js
-data-store.json
-.env.local
-.vercel/
