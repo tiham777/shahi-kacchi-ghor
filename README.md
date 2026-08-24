@@ -15,26 +15,30 @@ Authentic Bangladeshi biriyani restaurant website with a full customer ordering 
 - **Frontend**: Vanilla JS with hash-based routing, localStorage for cart
 - **Backend**: Node.js HTTP server with REST API
 - **Data**: JSON file store (seeds automatically on first run)
+- **Deployment**: Vercel (serverless functions for API, static files via CDN)
 
 ## Deployment
 
 ### Vercel (Recommended)
 
-```bash
-# Import the GitHub repo into Vercel
-# Or deploy via CLI:
-vercel
+The website is deployed on Vercel with auto-deploy from GitHub:
 
-# Set environment variables in Vercel dashboard:
-# - No required env vars — the app seeds with default data on first load
-```
+- **Production URL**: https://shahi-kacchi-ghor.vercel.app
+- **GitHub Repo**: https://github.com/tiham777/shahi-kacchi-ghor
 
-On Vercel, the server runs as a serverless function. Data is stored in memory (seeded from `seed.js` on first request). For persistent data, configure a database.
+Every push to the `master` branch triggers an automatic deployment on Vercel.
+
+#### How it works on Vercel
+
+- **Static files** (`index.html`, `css/`, `js/`) are served directly from Vercel's CDN
+- **API** (`/api/state`, `/api/coll/*`, `/api/singleton/*`) runs as a serverless function in `api/index.js`
+- **Data** is seeded in-memory from `seed.js` on first request (Vercel's serverless filesystem is read-only)
+- The Vercel project framework is set to "Other" to enable static + API separation
 
 ### Local Development
 
 ```bash
-node server.js
+node dev-server.js
 # Visit http://localhost:4173
 ```
 
@@ -44,10 +48,13 @@ Default admin credentials: `admin757xyz@gmail.com` / `Password8989$`
 
 ```
 ├── index.html          # Entry point
-├── server.js           # Node.js server (static files + API)
+├── api/
+│   └── index.js        # Vercel serverless function (API only)
+├── dev-server.js       # Local dev server (static files + API + disk persistence)
 ├── seed.js             # Initial dataset (menu, platters, settings)
-├── package.json        # Node.js project config
-├── vercel.json         # Vercel deployment config
+├── package.json        # Node.js project config (local dev only)
+├── vercel.json         # Vercel deployment config (routes + functions)
+├── .vercelignore       # Files excluded from Vercel build
 ├── .gitignore
 ├── css/
 │   ├── styles.css      # Customer-facing styles
