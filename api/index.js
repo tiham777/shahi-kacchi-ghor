@@ -1,6 +1,4 @@
-// Vercel Serverless Function — handles all API requests
-// On Vercel's serverless platform, data is stored in-memory per-function instance.
-// The state is seeded automatically from seed.js on first request.
+// Vercel Serverless Function — API only (static files served by Vercel CDN)
 const { seed } = require('../seed');
 
 // In-memory state (persists for the lifetime of this function instance)
@@ -44,7 +42,6 @@ async function handleApi(req, res, parts) {
     return sendJSON(res, 200, state);
   }
 
-  // singleton PATCH: /api/singleton/:name
   if (seg[0] === 'singleton' && method === 'PATCH') {
     const name = seg[1];
     if (!SINGLETONS[name]) return sendJSON(res, 404, { error: 'unknown singleton' });
@@ -53,7 +50,6 @@ async function handleApi(req, res, parts) {
     return sendJSON(res, 200, s[name]);
   }
 
-  // collection ops: /api/coll/:name (POST add), /api/coll/:name/:id (PATCH/DELETE)
   if (seg[0] === 'coll') {
     const name = seg[1], id = seg[2];
     if (!Array.isArray(s[name])) return sendJSON(res, 404, { error: 'unknown collection' });
