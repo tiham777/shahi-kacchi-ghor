@@ -1,14 +1,12 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
-  "builds": [
-    {
-      "src": "server.js",
-      "use": "nodejs18.x",
-      "config": {
-        "includeFiles": ["server.js", "seed.js", "index.html", "css/**", "js/**"]
-      }
+  "functions": {
+    "server.js": {
+      "maxDuration": 30,
+      "runtime": "nodejs18.x"
     }
-  ],
+  },
   "routes": [
     {
       "src": "/api/(.*)",
